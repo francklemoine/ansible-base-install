@@ -1,0 +1,5 @@
+---
+# default
+
+# ssh-keygen
+sshkeygen: [ 'user1', 'user2' ]

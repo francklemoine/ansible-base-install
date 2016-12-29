@@ -1,0 +1,18 @@
+---
+# tasks file for common
+
+- name: Update system
+  apt: update_cache=yes
+
+
+- name: Upgrading system
+  apt: upgrade=dist
+
+
+- name: Installing common packages
+  apt: name='{{ item }}' state=present
+  with_items:
+    - python-setuptools
+    - python3-setuptools
+    - sudo
+

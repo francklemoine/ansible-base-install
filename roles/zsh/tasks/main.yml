@@ -1,0 +1,21 @@
+---
+
+- name: install packages
+  apt: name='{{ item }}' update_cache=yes state=present
+  with_items:
+    - zsh
+
+
+- name: zsh configuration files
+  copy:
+    src: "../files/{{ item }}"
+    dest: "/etc/zsh"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  with_items:
+    - "zlogin"
+    - "zlogout"
+    - "zshenv"
+    - "zshrc"
+

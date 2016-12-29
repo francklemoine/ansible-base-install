@@ -1,0 +1,50 @@
+---
+
+- name: add group
+  group:
+    name: "{{ item.key }}"
+    gid: "{{ item.value.gid }}"
+    state: present
+  with_dict: "{{ users }}"
+  tags:
+    - useradd
+
+
+- name: add user
+  user:
+    name: "{{ item.key }}"
+    uid: "{{ item.value.uid }}"
+    group: "{{ item.key }}"
+    groups: "{{ item.value.groups }}"
+    home: "/home/{{ item.key }}"
+    password: "{{ item.value.password }}"
+    comment: "{{ item.value.comment }}"
+    shell: "{{ item.value.shell }}"
+    state: present
+  with_dict: "{{ users }}"
+  tags:
+    - useradd
+
+
+- name: create .zshrc
+  copy:
+    content: "# Created by newuser"
+    dest: "/home/{{ item.key }}/.zshrc"
+    owner: "{{ item.value.uid }}"
+    group: "{{ item.value.gid }}"
+    mode: 0644
+  when: ("{{ item.value.shell }}" == "/bin/zsh")
+  with_dict: "{{ users }}"
+  tags:
+    - useradd
+
+
+#- name: add user to the sudo group
+#  user:
+#    append: yes
+#    name: "{{ item.key }}"
+#    groups: sudo
+#  with_dict: "{{ users }}"
+#  tags:
+#    - sudogroup
+

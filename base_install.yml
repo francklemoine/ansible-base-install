@@ -1,0 +1,33 @@
+---
+
+- name: apply common configuration to all nodes
+  hosts: servers
+  roles:
+    - common
+  tags:
+    - always
+
+
+- name: Zsh installation
+  hosts: servers
+  roles:
+    - zsh
+  tags:
+    - zsh-install
+
+
+- name: Users creation
+  hosts: servers
+  roles:
+    - users
+  tags:
+    - users-add
+
+
+- name: sshd PermitRootLogin
+  hosts: servers
+  roles:
+    - permitrootlogin
+  tags:
+    - permitrootlogin
+

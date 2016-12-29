@@ -1,0 +1,13 @@
+---
+
+# tags:
+#   ssh-keygen:            generate ssh key to remote ssh host (ssh-keygen -t dsa)
+
+
+- name: authentication key generation
+  hosts: ssh
+  vars:
+    master: localhost
+  roles:
+    - authentication
+

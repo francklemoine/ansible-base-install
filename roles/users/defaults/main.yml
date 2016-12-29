@@ -1,0 +1,12 @@
+---
+# default
+
+users:
+  foouser:
+    uid: 1000
+    gid: 1000
+    password: "xxxxxxxx"
+#   to generate password: mkpasswd --method=SHA-512
+    comment: "Foo Bar,,,"
+    groups: "adm,disk,netdev,sudo"
+    shell: /bin/zsh

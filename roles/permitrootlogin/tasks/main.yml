@@ -1,0 +1,17 @@
+---
+
+- name: update the sshd_config file
+  lineinfile:
+    state: present
+    dest: /etc/ssh/sshd_config
+    regexp: '^PermitRootLogin'
+    line: 'PermitRootLogin no'
+  tags:
+    - permitrootno
+
+
+- name: sshd reload
+  service: name=ssh state=reloaded
+  tags:
+    - permitrootno
+
