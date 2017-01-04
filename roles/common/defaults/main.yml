@@ -2,3 +2,17 @@
 # default
 
 extra_packages: []
+
+extra_files:
+#  file01:
+#    src: foo
+#    dest: /tmp
+#    owner: root
+#    group: root
+#    mode: "0755"
+#  file02:
+#    filename: bar
+#    dest: /tmp
+#    owner: root
+#    group: root
+#    mode: "0755"

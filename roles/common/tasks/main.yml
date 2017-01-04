@@ -3,10 +3,12 @@
 
 - name: Update system
   apt: update_cache=yes
+  tags: base-install
 
 
 - name: Upgrading system
   apt: upgrade=dist
+  tags: base-install
 
 
 - name: Installing common packages
@@ -15,8 +17,21 @@
     - python-setuptools
     - python3-setuptools
     - sudo
+  tags: base-install
 
 - name: Installing extra packages
   apt: name='{{ item }}' state=present
   with_items:
     - "{{ extra_packages }}"
+  tags: extra-packages
+
+- name: Installing extra files
+  ignore_errors: yes
+  copy:
+    src: "../files/{{ item.value.src }}"
+    dest: "{{ item.value.dest }}"
+    owner: "{{ item.value.owner }}"
+    group: "{{ item.value.group }}"
+    mode: "{{ item.value.mode }}"
+  with_dict: "{{ extra_files }}"
+  tags: extra-files

@@ -4,9 +4,6 @@
   hosts: servers
   roles:
     - common
-  tags:
-    - always
-    - base-install
 
 
 - name: Zsh installation
