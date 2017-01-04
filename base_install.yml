@@ -6,6 +6,7 @@
     - common
   tags:
     - always
+    - base-install
 
 
 - name: Zsh installation
@@ -30,4 +31,3 @@
     - permitrootlogin
   tags:
     - permitrootlogin
-

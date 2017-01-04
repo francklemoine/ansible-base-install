@@ -17,6 +17,13 @@ Install on the remote host: Zsh + Users + PermitRootLogin
 	`ansible-playbook -i hosts -u root -k --tags all base_install.yml`
 
 
+Install extra packages
+----------------------
+  - Connection = sudo
+
+	`ansible-playbook -i hosts --become --ask-become-pass --tags base-install base_install.yml`
+
+
 Public key to remote server
 ---------------------------
 
