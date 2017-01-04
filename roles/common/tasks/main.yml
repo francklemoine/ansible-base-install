@@ -16,3 +16,7 @@
     - python3-setuptools
     - sudo
 
+- name: Installing extra packages
+  apt: name='{{ item }}' state=present
+  with_items:
+    - {{ extra_packages }}
