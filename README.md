@@ -5,9 +5,15 @@ Base Install
 Ansible (local prereq)
 ----------------------
 
-	`sudo pip install ansible`
+	`apt-get install python-pip python-dev build-essential`
 
-	`aptitude install sshpass`
+	`pip install --upgrade pip`
+
+	`pip install --upgrade virtualenv`
+
+	`pip install ansible`
+
+	`apt-get install sshpass`
 
 
 Install on the remote host: Zsh + Users + PermitRootLogin
