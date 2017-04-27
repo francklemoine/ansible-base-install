@@ -49,3 +49,11 @@ Public key to remote server
 ### 'ssh-copy-id'
 
 	`ssh-copy-id -i ~/.ssh/id_rsa.pub user@host`
+
+
+
+Install Borgbackup
+------------------
+
+	`ansible-playbook -i hosts --become --ask-become-pass --tags borg_install borgbackup_install.yml`
+	`ansible-playbook -i hosts --become --ask-become-pass --tags borg_cron borgbackup_install.yml`
