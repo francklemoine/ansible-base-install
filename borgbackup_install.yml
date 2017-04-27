@@ -1,0 +1,6 @@
+---
+
+- name: install Borgbackup
+  hosts: borgbackup
+  roles:
+    - borgbackup

@@ -1,0 +1,151 @@
+---
+
+- name: mandatory packages to install Borgbackup
+  apt: name='{{ item }}' update_cache=yes state=present
+  with_items:
+    - python3
+    - python3-dev
+    - python3-pip
+    - python-virtualenv
+    - libssl-dev
+    - openssl
+    - libacl1-dev
+    - libacl1
+    - liblz4-dev
+    - liblz4-1
+    - build-essential
+  tags:
+    - borg-install
+
+
+- name: optional packages for FUSE support (used with 'borg mount' command)
+  apt: name='{{ item }}' update_cache=yes state=present
+  with_items:
+    - libfuse-dev
+    - fuse
+    - pkg-config
+  tags: borg_install
+
+
+- name: install Borgbackup for Python 3
+  pip:
+    name: borgbackup
+    executable: pip3
+  tags: borg_install
+
+
+- name: create borg repository
+  file:
+    path: "{{ item.value.directory }}"
+    state: directory
+    owner: "{{ item.value.uid }}"
+    group: "{{ item.value.gid }}"
+    mode: 0775
+  when: borgbackup is defined
+  with_dict: "{{ borgbackup | default({}) }}"
+  tags: borg_install
+
+
+- name: install (pexpect) python package
+  pip:
+    name: pexpect
+    state: present
+  when: borgbackup is defined
+  with_dict: "{{ borgbackup | default({}) }}"
+  become: True
+  tags: borg_install
+
+
+- name: initialize borg repository
+  expect:
+    command: borg init --encryption=repokey {{ item.value.directory }}
+    responses:
+      '(?i)Enter (new|same) passphrase.*': "{{ item.value.passphrase }}"
+      '(?i)Do you want your passphrase to be displayed for verification.*': "n"
+    timeout: 60
+  when: borgbackup is defined
+  with_dict: "{{ borgbackup | default({}) }}"
+  become: False
+  tags: borg_install
+
+
+- name: cron (borg create)
+  cron:
+    cron_file: "{{ item.key }}"
+    name: "{{ item.value.comment }}"
+    user: root
+    minute: "{{ item.value.minute }}"
+    hour: "{{ item.value.hour }}"
+    day: "{{ item.value.day }}"
+    month: "{{ item.value.month }}"
+    weekday: "{{ item.value.weekday }}"
+    job: "borg create -v --stats ${REPOSITORY}::{hostname}_{now:%d.%m.%Y} ${DIRECTORIES}"
+  when: borgcron_create is defined
+  with_dict: "{{ borgcron_create | default({}) }}"
+  tags: borg_cron
+
+
+- name: cron PASSPHRASE variable (borg create)
+  cronvar:
+    cron_file: "{{ item.key }}"
+    name: PASSPHRASE
+    value: "{{ item.value.passphrase }}"
+  when: borgcron_create is defined
+  with_dict: "{{ borgcron_create | default({}) }}"
+  tags: borg_cron
+
+
+- name: cron DIRECTORIES variable (borg create)
+  cronvar:
+    cron_file: "{{ item.key }}"
+    name: DIRECTORIES
+    value: "{{ item.value.directories }}"
+  when: borgcron_create is defined
+  with_dict: "{{ borgcron_create | default({}) }}"
+  tags: borg_cron
+
+
+- name: cron REPOSITORY variable (borg create)
+  cronvar:
+    cron_file: "{{ item.key }}"
+    name: REPOSITORY
+    value: "{{ item.value.repository }}"
+  when: borgcron_create is defined
+  with_dict: "{{ borgcron_create | default({}) }}"
+  tags: borg_cron
+
+
+- name: cron (borg prune)
+  cron:
+    cron_file: "{{ item.key }}"
+    name: "{{ item.value.comment }}"
+    user: root
+    minute: "{{ item.value.minute }}"
+    hour: "{{ item.value.hour }}"
+    day: "{{ item.value.day }}"
+    month: "{{ item.value.month }}"
+    weekday: "{{ item.value.weekday }}"
+    job: "borg prune -v --keep-within=10d --keep-weekly=4 --keep-monthly=-1 ${REPOSITORY}"
+  when: borgcron_prune is defined
+  with_dict: "{{ borgcron_prune | default({}) }}"
+  tags: borg_cron
+
+
+- name: cron PASSPHRASE variable (borg prune)
+  cronvar:
+    cron_file: "{{ item.key }}"
+    name: PASSPHRASE
+    value: "{{ item.value.passphrase }}"
+  when: borgcron_prune is defined
+  with_dict: "{{ borgcron_prune | default({}) }}"
+  tags: borg_cron
+
+
+- name: cron REPOSITORY variable (borg prune)
+  cronvar:
+    cron_file: "{{ item.key }}"
+    name: REPOSITORY
+    value: "{{ item.value.repository }}"
+  when: borgcron_prune is defined
+  with_dict: "{{ borgcron_prune | default({}) }}"
+  tags: borg_cron
