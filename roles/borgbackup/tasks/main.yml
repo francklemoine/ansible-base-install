@@ -15,7 +15,7 @@
     - liblz4-1
     - build-essential
   tags:
-    - borg-install
+    - borg_install
 
 
 - name: optional packages for FUSE support (used with 'borg mount' command)
@@ -69,6 +69,30 @@
   tags: borg_install
 
 
+- name: copy borg_create script
+  template:
+    src: "../templates/borg_create.j2"
+    dest: "/usr/local/bin/{{ item.key }}.sh"
+    owner: root
+    group: root
+    mode: 0500
+  when: borgcron_create is defined
+  with_dict: "{{ borgcron_create | default({}) }}"
+  tags: borg_cron
+
+
+- name: copy borg_prune script
+  template:
+    src: "../templates/borg_prune.j2"
+    dest: "/usr/local/bin/{{ item.key }}.sh"
+    owner: root
+    group: root
+    mode: 0500
+  when: borgcron_prune is defined
+  with_dict: "{{ borgcron_prune | default({}) }}"
+  tags: borg_cron
+
+
 - name: cron (borg create)
   cron:
     cron_file: "{{ item.key }}"
@@ -79,37 +103,7 @@
     day: "{{ item.value.day }}"
     month: "{{ item.value.month }}"
     weekday: "{{ item.value.weekday }}"
-    job: "borg create -v --stats ${REPOSITORY}::{hostname}_{now:%d.%m.%Y} ${DIRECTORIES}"
-  when: borgcron_create is defined
-  with_dict: "{{ borgcron_create | default({}) }}"
-  tags: borg_cron
-
-
-- name: cron PASSPHRASE variable (borg create)
-  cronvar:
-    cron_file: "{{ item.key }}"
-    name: PASSPHRASE
-    value: "{{ item.value.passphrase }}"
-  when: borgcron_create is defined
-  with_dict: "{{ borgcron_create | default({}) }}"
-  tags: borg_cron
-
-
-- name: cron DIRECTORIES variable (borg create)
-  cronvar:
-    cron_file: "{{ item.key }}"
-    name: DIRECTORIES
-    value: "{{ item.value.directories }}"
-  when: borgcron_create is defined
-  with_dict: "{{ borgcron_create | default({}) }}"
-  tags: borg_cron
-
-
-- name: cron REPOSITORY variable (borg create)
-  cronvar:
-    cron_file: "{{ item.key }}"
-    name: REPOSITORY
-    value: "{{ item.value.repository }}"
+    job: "/usr/local/bin/{{ item.key }}.sh"
   when: borgcron_create is defined
   with_dict: "{{ borgcron_create | default({}) }}"
   tags: borg_cron
@@ -125,27 +119,7 @@
     day: "{{ item.value.day }}"
     month: "{{ item.value.month }}"
     weekday: "{{ item.value.weekday }}"
-    job: "borg prune -v --keep-within=10d --keep-weekly=4 --keep-monthly=-1 ${REPOSITORY}"
-  when: borgcron_prune is defined
-  with_dict: "{{ borgcron_prune | default({}) }}"
-  tags: borg_cron
-
-
-- name: cron PASSPHRASE variable (borg prune)
-  cronvar:
-    cron_file: "{{ item.key }}"
-    name: PASSPHRASE
-    value: "{{ item.value.passphrase }}"
-  when: borgcron_prune is defined
-  with_dict: "{{ borgcron_prune | default({}) }}"
-  tags: borg_cron
-
-
-- name: cron REPOSITORY variable (borg prune)
-  cronvar:
-    cron_file: "{{ item.key }}"
-    name: REPOSITORY
-    value: "{{ item.value.repository }}"
+    job: "/usr/local/bin/{{ item.key }}.sh"
   when: borgcron_prune is defined
   with_dict: "{{ borgcron_prune | default({}) }}"
   tags: borg_cron

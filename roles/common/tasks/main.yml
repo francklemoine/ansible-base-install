@@ -33,5 +33,6 @@
     owner: "{{ item.value.owner }}"
     group: "{{ item.value.group }}"
     mode: "{{ item.value.mode }}"
+    backup: "{{ item.value.backup | default('no') }}"
   with_dict: "{{ extra_files }}"
   tags: extra-files
