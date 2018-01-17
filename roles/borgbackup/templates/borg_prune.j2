@@ -1,0 +1,7 @@
+#!/bin/bash
+
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export BORG_PASSPHRASE="{{ item.value.passphrase }}"
+REPOSITORY="{{ item.value.repository }}"
+
+borg prune -v --keep-within=10d --keep-weekly=4 --keep-monthly=-1 ${REPOSITORY}

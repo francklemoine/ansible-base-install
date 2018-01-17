@@ -1,0 +1,8 @@
+#!/bin/bash
+
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export BORG_PASSPHRASE="{{ item.value.passphrase }}"
+REPOSITORY="{{ item.value.repository }}"
+DIRECTORIES="{{ item.value.directories }}"
+
+borg create -v --stats ${REPOSITORY}::{hostname}_{now:%d.%m.%Y} ${DIRECTORIES}
