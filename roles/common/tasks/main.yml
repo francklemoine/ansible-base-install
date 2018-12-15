@@ -36,3 +36,12 @@
     backup: "{{ item.value.backup | default('no') }}"
   with_dict: "{{ extra_files }}"
   tags: extra-files
+
+- name: Set ip forwarding on in /proc and in the sysctl file and reload if necessary
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+  tags: ip-forwarding

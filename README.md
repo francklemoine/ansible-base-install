@@ -1,59 +1,70 @@
-Base Install
-============
+# Base Install
 
 
-Ansible (local prereq)
-----------------------
+## :one: Ansible (local prereq)
 
-	`apt-get install python-pip python-dev build-essential`
-
-	`pip install --upgrade pip`
-
-	`pip install --upgrade virtualenv`
-
-	`pip install ansible`
-
-	`apt-get install sshpass`
+```bash
+apt-get install python-pip python-dev build-essential
+pip install --upgrade pip
+pip install --upgrade virtualenv
+pip install ansible
+apt-get install sshpass
+```
 
 
-Install on the remote host: Zsh + Users + PermitRootLogin
----------------------------------------------------------
-  - Connection = root
+## :two: Install on the remote host: Zsh + Users + PermitRootLogin
 
-	`ansible-playbook -i hosts -u root -k --tags base-install,zsh-install,users-add,permitrootlogin base_install.yml`
+- Connection = root
 
-
-Install extra packages/files
-----------------------------
-  - Connection = sudo
-
-	`ansible-playbook -i hosts --become --ask-become-pass --tags extra-packages base_install.yml`
-	`ansible-playbook -i hosts --become --ask-become-pass --tags extra-files base_install.yml`
+```bash
+ansible-playbook -i hosts -u root -k --tags base-install,zsh-install,users-add,permitrootlogin base_install.yml
+```
 
 
-Public key to remote server
----------------------------
+## :three: Install extra packages/files
 
-### 'ssh-keygen' command line
+- Connection = sudo
 
-	`ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa`
-
-
-### 'ssh-keygen' with Ansible
-
-	`ansible-playbook -i hosts -u root -k --tags ssh-keygen authentication_install.yml`
-
-	`ansible-playbook -i hosts --become --ask-become-pass --tags ssh-keygen authentication_install.yml`
+```bash
+ansible-playbook -i hosts --become --ask-become-pass --tags extra-packages base_install.yml
+ansible-playbook -i hosts --become --ask-become-pass --tags extra-files base_install.yml
+```
 
 
-### 'ssh-copy-id'
+## :four: Set ip forwarding on in /proc and in the sysctl file and reload if necessary
 
-	`ssh-copy-id -i ~/.ssh/id_rsa.pub user@host`
+- Connection = sudo
+
+```bash
+ansible-playbook -i hosts --become --ask-become-pass --tags ip-forwarding base_install.yml
+```
 
 
+## :five: Public key to remote server
 
-Install Borgbackup
-------------------
+### `ssh-keygen` command line
 
-	`ansible-playbook -i hosts --become --ask-become-pass --tags borg_install borgbackup_install.yml`
-	`ansible-playbook -i hosts --become --ask-become-pass --tags borg_cron borgbackup_install.yml`
+```bash
+ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa
+```
+
+### `ssh-keygen` with Ansible
+
+```bash
+ansible-playbook -i hosts -u root -k --tags ssh-keygen authentication_install.yml
+ansible-playbook -i hosts --become --ask-become-pass --tags ssh-keygen authentication_install.yml
+```
+
+### `ssh-copy-id`
+
+```bash
+ssh-copy-id -i ~/.ssh/id_rsa.pub user@host
+```
+
+
+## :six: Install Borgbackup
+
+```bash
+ansible-playbook -i hosts --become --ask-become-pass --tags borg_install borgbackup_install.yml
+ansible-playbook -i hosts --become --ask-become-pass --tags borg_cron borgbackup_install.yml
+```
