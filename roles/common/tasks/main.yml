@@ -12,23 +12,26 @@
 
 
 - name: Installing common packages
-  apt: name='{{ item }}' state=present
-  with_items:
-    - python-setuptools
-    - python3-setuptools
-    - sudo
+  apt:
+    pkg:
+      - python-setuptools
+      - python3-setuptools
+      - sudo
+    state: present
   tags: base-install
 
 - name: Installing extra packages
-  apt: name='{{ item }}' state=present
-  with_items:
-    - "{{ extra_packages }}"
+  apt:
+    pkg: "{{ extra_packages }}"
+    state: present
   tags: extra-packages
 
 - name: Installing extra files
   ignore_errors: yes
-  copy:
-    src: "../files/{{ item.value.src }}"
+  #copy:
+  template:
+    #src: "../files/{{ item.value.src }}"
+    src: "../templates/{{ item.value.src }}"
     dest: "{{ item.value.dest }}"
     owner: "{{ item.value.owner }}"
     group: "{{ item.value.group }}"

@@ -1,9 +1,11 @@
 ---
 
 - name: install packages
-  apt: name='{{ item }}' update_cache=yes state=present
-  with_items:
-    - zsh
+  apt:
+    update_cache: yes
+    pkg:
+      - zsh
+    state: present
 
 
 - name: zsh configuration files
@@ -18,4 +20,3 @@
     - "zlogout"
     - "zshenv"
     - "zshrc"
-

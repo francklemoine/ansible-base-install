@@ -16,3 +16,18 @@ extra_files:
 #    owner: root
 #    group: root
 #    mode: "0755"
+
+host:
+  hostname:  "undef"
+  domain: "flem.lan"
+  eth0:
+    address:   "192.168.0.10"
+    netmask:   "255.255.255.0"
+    network:   "192.168.0.0"
+    broadcast: "192.168.0.255"
+    gateway:   "192.168.0.250"
+  wlan0:
+    address:   "192.168.0.10"
+    netmask:   "255.255.255.0"
+    network:   "192.168.0.0"
+    broadcast: "192.168.0.255"
