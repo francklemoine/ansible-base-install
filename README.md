@@ -17,7 +17,7 @@ apt-get install sshpass
 - Connection = root
 
 ```bash
-ansible-playbook -i hosts -u root -k --tags base-install,zsh-install,users-add,permitrootlogin base_install.yml
+ansible-playbook -i inventory/hosts -u root -k --tags base-install,zsh-install,users-add,permitrootlogin base_install.yml
 ```
 
 
@@ -26,8 +26,8 @@ ansible-playbook -i hosts -u root -k --tags base-install,zsh-install,users-add,p
 - Connection = sudo
 
 ```bash
-ansible-playbook -i hosts --become --ask-become-pass --tags extra-packages base_install.yml
-ansible-playbook -i hosts --become --ask-become-pass --tags extra-files base_install.yml
+ansible-playbook -i inventory/hosts --become --ask-become-pass --tags extra-packages base_install.yml
+ansible-playbook -i inventory/hosts --become --ask-become-pass --tags extra-files base_install.yml
 ```
 
 
@@ -36,7 +36,7 @@ ansible-playbook -i hosts --become --ask-become-pass --tags extra-files base_ins
 - Connection = sudo
 
 ```bash
-ansible-playbook -i hosts --become --ask-become-pass --tags ip-forwarding base_install.yml
+ansible-playbook -i inventory/hosts --become --ask-become-pass --tags ip-forwarding base_install.yml
 ```
 
 
@@ -51,8 +51,8 @@ ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa
 ### `ssh-keygen` with Ansible
 
 ```bash
-ansible-playbook -i hosts -u root -k --tags ssh-keygen authentication_install.yml
-ansible-playbook -i hosts --become --ask-become-pass --tags ssh-keygen authentication_install.yml
+ansible-playbook -i inventory/hosts -u root -k --tags ssh-keygen authentication_install.yml
+ansible-playbook -i inventory/hosts --become --ask-become-pass --tags ssh-keygen authentication_install.yml
 ```
 
 ### `ssh-copy-id`
@@ -65,6 +65,6 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub user@host
 ## :six: Install Borgbackup
 
 ```bash
-ansible-playbook -i hosts --become --ask-become-pass --tags borg_install borgbackup_install.yml
-ansible-playbook -i hosts --become --ask-become-pass --tags borg_cron borgbackup_install.yml
+ansible-playbook -i inventory/hosts --become --ask-become-pass --tags borg_install borgbackup_install.yml
+ansible-playbook -i inventory/hosts --become --ask-become-pass --tags borg_cron borgbackup_install.yml
 ```
